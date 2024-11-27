@@ -136,7 +136,8 @@ class NuScenesMultiViewDataset(MultiViewMixin, NuScenesDataset):
         all_img_gt, all_img_pred, all_bev_gt, all_bev_pred = [], [], [], []
         for i, result in enumerate(results):
             info = self.get_data_info(i)
-            gt_bboxes = self.get_ann_info(i)
+            #gt_bboxes = self.get_ann_info(i)
+            gt_bboxes = None
             print('saving image {}/{} to {}'.format(i, len(results), out_dir))
             # draw 3d box in BEV
             scale_fac = 10
@@ -175,10 +176,11 @@ class NuScenesMultiViewDataset(MultiViewMixin, NuScenesDataset):
                     interpolation='bilinear')
             try:
                 # draw BEV GT
-                bev_gt_bboxes = gt_bboxes['gt_bboxes_3d'].corners.numpy()[:,[0,2,6,4]][..., :2]
-                labels_gt = gt_bboxes['gt_labels_3d']
-                for idx in range(len(labels_gt)):
-                    bev_gt_img = self.draw_bev_bbox_corner(bev_gt_img, bev_gt_bboxes[idx], colors[labels_gt[idx]], scale_fac)
+                if gt_bboxes is not None:
+                    bev_gt_bboxes = gt_bboxes['gt_bboxes_3d'].corners.numpy()[:,[0,2,6,4]][..., :2]
+                    labels_gt = gt_bboxes['gt_labels_3d']
+                    for idx in range(len(labels_gt)):
+                        bev_gt_img = self.draw_bev_bbox_corner(bev_gt_img, bev_gt_bboxes[idx], colors[labels_gt[idx]], scale_fac)
             except:
                 pass
             bev_gt_img = process_bev_res_in_front(bev_gt_img)
@@ -189,7 +191,8 @@ class NuScenesMultiViewDataset(MultiViewMixin, NuScenesDataset):
             ###### draw 3d box in image ######
             img_gt_list = []
             img_pred_list = []
-            for j in range(len(info['img_info'])):
+            #for j in range(len(info['img_info'])):
+            for j in range(len(info['img_info'][:6])):
                 img_pred = imread(info['img_info'][j]['filename'])
                 img_gt = imread(info['img_info'][j]['filename'])
                 # camera name

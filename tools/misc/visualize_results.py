@@ -29,7 +29,7 @@ def main():
     cfg.data.test.test_mode = True
 
     # build the dataset
-    dataset = build_dataset(cfg.data.test)
+    dataset = build_dataset(cfg.data.test, dict(test_mode=True))
     results = mmcv.load(args.result)
 
     if getattr(dataset, 'show', None) is not None:
