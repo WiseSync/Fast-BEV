@@ -8,7 +8,7 @@ model = dict(
         num_stages=4,
         out_indices=(0, 1, 2, 3),
         frozen_stages=1,
-        norm_cfg=dict(type='SyncBN', requires_grad=True),
+        norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
         init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet18'),
         style='pytorch'
@@ -143,11 +143,11 @@ data_config = {
     'pad_color': (0, 0, 0),
 }
 
-# file_client_args = dict(backend='disk')
-file_client_args = dict(
-    backend='petrel',
-    path_mapping=dict({
-        data_root: 'public-1424:s3://openmmlab/datasets/detection3d/nuscenes/'}))
+file_client_args = dict(backend='disk')
+# file_client_args = dict(
+#     backend='petrel',
+#     path_mapping=dict({
+#         data_root: 'public-1424:s3://openmmlab/datasets/detection3d/nuscenes/'}))
 
 train_pipeline = [
     dict(type='MultiViewPipeline', sequential=True, n_images=6, n_times=4, transforms=[
@@ -263,7 +263,7 @@ data = dict(
         test_mode=True,
         with_box2d=True,
         box_type_3d='LiDAR',
-        ann_file='data/nuscenes/nuscenes_infos_val_4d_interval3_max60.pkl',
+        ann_file='data/nuscenes/nuscenes_infos_test_4d_interval3_max60.pkl',
         load_interval=1,
         sequential=True,
         n_times=4,
